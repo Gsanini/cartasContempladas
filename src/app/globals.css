@@ -117,7 +117,7 @@
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
   --color-cor-texto: #ffffff;
-  --color-cor-page: #252020;
+  --color-cor-page: #181818;
 }
 
 @layer base {
@@ -126,5 +126,36 @@
   }
   body {
     @apply bg-background text-foreground;
+  }
+}
+
+/* Estilos para coluna fixa da tabela */
+@layer components {
+  .table-sticky-column {
+    position: sticky;
+    right: 0;
+    z-index: 10;
+    background: inherit;
+    border-left: 1px solid hsl(var(--border));
+    min-width: 120px;
+  }
+
+  .table-sticky-column::before {
+    content: "";
+    position: absolute;
+    left: -4px;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: linear-gradient(to right, transparent, rgba(0, 0, 0, 0.1));
+    pointer-events: none;
+  }
+
+  .dark .table-sticky-column::before {
+    background: linear-gradient(
+      to right,
+      transparent,
+      rgba(255, 255, 255, 0.1)
+    );
   }
 }

@@ -5,15 +5,31 @@ import Link from "next/link";
 
 export default function HeaderPremium() {
   return (
-    <header className="w-full bg-vermelho py-6 flex items-center justify-between gap-10 px-4 md:px-20 lg:px-40 xl:px-100">
-      <Image
-        src={"/premiumLogo.png"}
-        alt="Logo Premium"
-        width={140}
-        height={50}
-        priority
-        className="w-27 md:w-35"
-      />
+    <header className="w-full bg-vermelho py-6 flex items-center justify-between gap-5 px-4 md:px-10 lg:px-30 xl:px-60">
+      <div className="flex items-center gap-4">
+        <div className="md:border-r md:border-gray-200/40 pr-5">
+          <Image
+            src={"/premiumLogo.png"}
+            alt="Logo Premium"
+            width={140}
+            height={50}
+            priority
+            className="w-27 md:w-35"
+          />
+        </div>
+
+        <div className="hidden md:flex">
+          <Image
+            src={"/hsConsorcios.png"}
+            alt="Logo Premium"
+            width={140}
+            height={50}
+            priority
+            className="w-27 md:w-35"
+          />
+        </div>
+      </div>
+
       <div className="flex items-center gap-0.5">
         <ThemeToggle />
         <hr className="border-l border-gray-200/40 h-6 mx-1.5" />
@@ -34,9 +50,6 @@ export default function HeaderPremium() {
           />
         </Link>
 
-        <div className="text-white hover:bg-gray-300/30 p-2 rounded-full transition-colors duration-300 cursor-pointer">
-          <Mail size={18} />
-        </div>
         <Link
           href={
             "https://www.instagram.com/premium.consorcios?igsh=MTF4emZicjZnMmhlNQ=="
