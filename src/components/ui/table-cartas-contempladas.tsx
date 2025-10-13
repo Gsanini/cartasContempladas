@@ -6,7 +6,6 @@ import {
   getCoreRowModel,
   getFilteredRowModel,
   getSortedRowModel,
-  getPaginationRowModel,
   ColumnDef,
   flexRender,
   SortingState,
@@ -103,15 +102,17 @@ export function ConsorcioTable({ data }: ConsorcioTableProps) {
   const [selectedCategoria, setSelectedCategoria] = useState<string>("all");
   const [selectedDisponibilidade, setSelectedDisponibilidade] =
     useState<string>("all");
-  const [maxCredito, setMaxCredito] = useState<number[]>([600000]);
-  const [pagination, setPagination] = useState({
-    pageIndex: 0,
-    pageSize: 50,
-  });
+
+  const [maxCredito, setMaxCredito] = useState<number[]>([1000000]);
+
+  useEffect(() => {
+    if (data.length > 0 && sorting.length === 0) {
+      setSorting([{ id: "valor-do-credito", desc: true }]);
+    }
+  }, [data, sorting]);
 
   const debouncedCategoria = useDebounce(selectedCategoria, 300);
   const debouncedDisponibilidade = useDebounce(selectedDisponibilidade, 150);
-  const debouncedMaxCredito = useDebounce(maxCredito, 150);
 
   const categorias = useMemo(() => {
     const categoriaSet = new Set<string>();
@@ -129,15 +130,6 @@ export function ConsorcioTable({ data }: ConsorcioTableProps) {
     return Array.from(disponibilidadeSet).sort();
   }, [data]);
 
-  const maxCreditoValue = useMemo(() => {
-    let max = 0;
-    for (const item of data) {
-      const value = parseCredito(item["valor-do-credito"]);
-      if (value > max) max = value;
-    }
-    return max + 1000;
-  }, [data]);
-
   const processedData = useMemo(() => {
     return data.map((item) => ({
       ...item,
@@ -152,44 +144,40 @@ export function ConsorcioTable({ data }: ConsorcioTableProps) {
       const matchDisponibilidade =
         debouncedDisponibilidade === "all" ||
         item["situacao-da-carta"] === debouncedDisponibilidade;
-      const matchCredito = item.creditoNumerico <= debouncedMaxCredito[0];
+      const matchCredito = item.creditoNumerico <= maxCredito[0];
+
       return matchCategoria && matchDisponibilidade && matchCredito;
     });
-  }, [
-    processedData,
-    debouncedCategoria,
-    debouncedDisponibilidade,
-    debouncedMaxCredito,
-  ]);
+  }, [processedData, debouncedCategoria, debouncedDisponibilidade, maxCredito]);
 
   const columns: ColumnDef<CartaConsorcio>[] = useMemo(
     () => [
-      {
-        id: "select",
-        header: ({ table }) => (
-          <Checkbox
-            checked={table.getIsAllPageRowsSelected()}
-            onCheckedChange={(value) =>
-              table.toggleAllPageRowsSelected(!!value)
-            }
-            aria-label="Selecionar todos"
-          />
-        ),
-        cell: ({ row }) => (
-          <Checkbox
-            checked={row.getIsSelected()}
-            onCheckedChange={(value) => row.toggleSelected(!!value)}
-            aria-label="Selecionar linha"
-          />
-        ),
-        enableSorting: false,
-        enableHiding: false,
-      },
+      // {
+      //   id: "select",
+      //   header: ({ table }) => (
+      //     <Checkbox
+      //       checked={table.getIsAllPageRowsSelected()}
+      //       onCheckedChange={(value) =>
+      //         table.toggleAllPageRowsSelected(!!value)
+      //       }
+      //       aria-label="Selecionar todos"
+      //     />
+      //   ),
+      //   cell: ({ row }) => (
+      //     <Checkbox
+      //       checked={row.getIsSelected()}
+      //       onCheckedChange={(value) => row.toggleSelected(!!value)}
+      //       aria-label="Selecionar linha"
+      //     />
+      //   ),
+      //   enableSorting: false,
+      //   enableHiding: false,
+      // },
       {
         accessorKey: "categoria",
-        header: "Categoria",
+        header: () => <div className="ml-1">Categoria</div>,
         cell: ({ row }) => (
-          <div className="font-semibold text-[12.5px] flex items-center gap-1.5">
+          <div className="font-semibold text-[12.5px] flex items-center gap-1.5 ml-1">
             {row.getValue("categoria") === "Imóvel" ? (
               <House size={19} />
             ) : (
@@ -297,19 +285,14 @@ export function ConsorcioTable({ data }: ConsorcioTableProps) {
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     onSortingChange: setSorting,
     onColumnFiltersChange: setColumnFilters,
     onRowSelectionChange: setRowSelection,
-    onPaginationChange: setPagination,
     state: {
       sorting,
       columnFilters,
       rowSelection,
-      pagination,
     },
-    manualPagination: false,
-    pageCount: Math.ceil(filteredData.length / pagination.pageSize),
   });
 
   const handleCategoriaChange = useCallback((value: string) => {
@@ -390,7 +373,7 @@ export function ConsorcioTable({ data }: ConsorcioTableProps) {
             <Slider
               value={maxCredito}
               onValueChange={handleCreditoChange}
-              max={maxCreditoValue}
+              max={1000000}
               min={0}
               step={10000}
               className="w-full"
@@ -398,7 +381,7 @@ export function ConsorcioTable({ data }: ConsorcioTableProps) {
           </div>
         </div>
       </div>
-      <div className="rounded-lg border bg-card shadow-sm">
+      <div className="rounded-lg border bg-card shadow-sm mb-10">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -447,73 +430,6 @@ export function ConsorcioTable({ data }: ConsorcioTableProps) {
             )}
           </TableBody>
         </Table>
-      </div>
-
-      <div className="flex items-center justify-between space-x-2 space-y-4 py-4 flex-wrap">
-        <div className="flex items-center space-x-2">
-          <p className="text-sm font-medium">Linhas por página</p>
-          <Select
-            value={`${table.getState().pagination.pageSize}`}
-            onValueChange={(value) => {
-              table.setPageSize(Number(value));
-            }}
-          >
-            <SelectTrigger className="h-8 w-[100px]">
-              <SelectValue placeholder={table.getState().pagination.pageSize} />
-            </SelectTrigger>
-            <SelectContent side="top">
-              {[25, 50, 100, 200].map((pageSize) => (
-                <SelectItem key={pageSize} value={`${pageSize}`}>
-                  {pageSize}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
-        </div>
-        <div className="flex items-center space-x-2 ">
-          <div className="flex items-center justify-center text-sm font-medium">
-            Página {table.getState().pagination.pageIndex + 1} de{" "}
-            {table.getPageCount()}
-          </div>
-          <div className="flex items-center space-x-2">
-            <Button
-              variant="outline"
-              className="hidden h-8 w-8 p-0 lg:flex"
-              onClick={() => table.setPageIndex(0)}
-              disabled={!table.getCanPreviousPage()}
-            >
-              <span className="sr-only">Ir para primeira página</span>
-              {"<<"}
-            </Button>
-            <Button
-              variant="outline"
-              className="h-8 w-8 p-0"
-              onClick={() => table.previousPage()}
-              disabled={!table.getCanPreviousPage()}
-            >
-              <span className="sr-only">Ir para página anterior</span>
-              {"<"}
-            </Button>
-            <Button
-              variant="outline"
-              className="h-8 w-8 p-0"
-              onClick={() => table.nextPage()}
-              disabled={!table.getCanNextPage()}
-            >
-              <span className="sr-only">Ir para próxima página</span>
-              {">"}
-            </Button>
-            <Button
-              variant="outline"
-              className="hidden h-8 w-8 p-0 lg:flex"
-              onClick={() => table.setPageIndex(table.getPageCount() - 1)}
-              disabled={!table.getCanNextPage()}
-            >
-              <span className="sr-only">Ir para última página</span>
-              {">>"}
-            </Button>
-          </div>
-        </div>
       </div>
     </div>
   );
