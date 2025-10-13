@@ -5,8 +5,8 @@ import Link from "next/link";
 export default function HeaderPremium() {
   return (
     <header className="w-full bg-vermelho py-6 flex items-center justify-between gap-5 px-4 md:px-10 lg:px-30 xl:px-60">
-      <div className="flex items-center gap-4">
-        <div className="border-r border-gray-200/40 pr-5">
+      <div className="flex items-center gap-2.5 md:gap-4">
+        <div className="border-r border-gray-200/40 pr-3 md:pr-5">
           <Image
             src={"/premiumLogo.png"}
             alt="Logo Premium"
