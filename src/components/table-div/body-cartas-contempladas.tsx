@@ -41,24 +41,24 @@ export default function TableDiv() {
   }, []);
 
   return (
-    <div className="w-full px-4 md:px-10 lg:px-30 xl:px-60 mt-8 md:mt-15">
+    <div className='w-full px-4 md:px-10 lg:px-30 xl:px-60 pt-8 md:pt-15'>
       <div>
-        <h1 className="text-[25px] md:text-[30px] font-semibold mb-1 text-cor-texto leading-10">
+        <h1 className='text-[25px] md:text-[30px] font-semibold mb-1 text-cor-texto leading-10'>
           Cartas Contempladas
         </h1>
-        <p className="text-gray-500/80 dark:text-gray-400/80 text-[12px] md:text-[13.5px] ml-0.5">
+        <p className='text-gray-500/80 dark:text-gray-400/80 text-[12px] md:text-[13.5px] ml-0.5'>
           Veja abaixo as cartas contempladas disponíveis e aproveite a
           oportunidade de adquirir seu bem de forma rápida e sem burocracia.{" "}
-          <span className="hidden md:inline">
+          <span className='hidden md:inline'>
             Ao optar por uma carta contemplada, você tem acesso imediato ao
             crédito, sem precisar esperar sorteios ou lances. Solicite agora sua
             análise e conquiste o que deseja com agilidade e segurança.
           </span>
         </p>
       </div>
-      <div className="mt-8 md:mt-15">
+      <div className='mt-8 md:mt-15'>
         {loading ? (
-          <LoadingSpinner message="Carregando cartas contempladas..." />
+          <LoadingSpinner message='Carregando cartas contempladas...' />
         ) : error ? (
           <ErrorDisplay error={error} onRetry={getDados} />
         ) : (
