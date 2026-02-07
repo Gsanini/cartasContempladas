@@ -155,13 +155,6 @@ export default function HeaderPremium() {
                   >
                     Cartas contempladas
                   </Link>
-                  <Link
-                    href='/simulador'
-                    className='text-white text-[15px] font-medium hover:bg-white/10 px-4 py-3 rounded-xl transition-all duration-300 hover:translate-x-2'
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Simulador
-                  </Link>
                 </div>
               </nav>
 

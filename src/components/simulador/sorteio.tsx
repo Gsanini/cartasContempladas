@@ -2,6 +2,7 @@ import { DollarSign } from "lucide-react";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { formatCurrency } from "./util";
+import VendaCarta from "../venda-carta";
 
 interface SorteioSimuladorProps {
   parcelasPagas: number | undefined;
@@ -170,6 +171,12 @@ export function SorteioSimulador({
           </p>
         </div>
       </div>
+      <VendaCarta
+        valorPago={valorPago}
+        creditoLiquido={creditoInicial}
+        parcelasPagas={parcelasPagas ? parcelasPagas : 0}
+        prazoTotal={prazoTotal}
+      />
     </div>
   );
 }

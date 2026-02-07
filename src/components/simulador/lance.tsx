@@ -3,6 +3,7 @@ import { DollarSign } from "lucide-react";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { formatCurrency } from "./util";
+import VendaCarta from "../venda-carta";
 
 interface LanceSimuladorProps {
   parcelasPagas: number | undefined;
@@ -256,6 +257,12 @@ export function LanceSimulador({
           </p>
         </div>
       </div>
+      <VendaCarta
+        valorPago={valorPago}
+        creditoLiquido={creditoLiquido}
+        parcelasPagas={parcelasPagas ? parcelasPagas : 0}
+        prazoTotal={prazoTotal}
+      />
     </div>
   );
 }
