@@ -103,11 +103,11 @@ export function ConsorcioTable({ data }: ConsorcioTableProps) {
   const [selectedDisponibilidade, setSelectedDisponibilidade] =
     useState<string>("all");
 
-  const [maxCredito, setMaxCredito] = useState<number[]>([1000000]);
+  const [maxCredito, setMaxCredito] = useState<number[]>([2000000]);
 
   useEffect(() => {
     if (data.length > 0 && sorting.length === 0) {
-      setSorting([{ id: "valor-do-credito", desc: true }]);
+      setSorting([{ id: "creditoNumerico", desc: true }]);
     }
   }, [data, sorting]);
 
@@ -154,9 +154,9 @@ export function ConsorcioTable({ data }: ConsorcioTableProps) {
     () => [
       {
         accessorKey: "categoria",
-        header: () => <div className='ml-1'>Categoria</div>,
+        header: () => <div className="ml-1">Categoria</div>,
         cell: ({ row }) => (
-          <div className='font-semibold text-[12.5px] flex items-center gap-1.5 ml-1'>
+          <div className="font-semibold text-[12.5px] flex items-center gap-1.5 ml-1">
             {row.getValue("categoria") === "Imóvel" ? (
               <House size={19} />
             ) : (
@@ -167,23 +167,23 @@ export function ConsorcioTable({ data }: ConsorcioTableProps) {
         ),
       },
       {
-        accessorKey: "valor-do-credito",
+        accessorKey: "creditoNumerico",
         header: ({ column }) => {
           return (
             <Button
-              variant='ghost'
+              variant="ghost"
               onClick={() =>
                 column.toggleSorting(column.getIsSorted() === "asc")
               }
             >
               Crédito
-              <ArrowUpDown className='ml-2 size-[13px]' />
+              <ArrowUpDown className="ml-2 size-[13px]" />
             </Button>
           );
         },
         cell: ({ row }) => (
-          <div className='font-semibold text-[12.5px]'>
-            {row.getValue("valor-do-credito")}
+          <div className="font-semibold text-[12.5px]">
+            {row.original["valor-do-credito"]}
           </div>
         ),
       },
@@ -191,7 +191,7 @@ export function ConsorcioTable({ data }: ConsorcioTableProps) {
         accessorKey: "entrada",
         header: "Entrada",
         cell: ({ row }) => (
-          <div className='text-[12.5px] font-semibold'>
+          <div className="text-[12.5px] font-semibold">
             {row.getValue("entrada")}
           </div>
         ),
@@ -200,16 +200,16 @@ export function ConsorcioTable({ data }: ConsorcioTableProps) {
         accessorKey: "parcelas",
         header: "Parcela",
         cell: ({ row }) => (
-          <div className='text-[12.5px] font-semibold'>
+          <div className="text-[12.5px] font-semibold">
             {row.getValue("parcelas")}
           </div>
         ),
       },
       {
         accessorKey: "observacoes",
-        header: () => <div className='text-center'>Observações</div>,
+        header: () => <div className="text-center">Observações</div>,
         cell: ({ row }) => (
-          <div className='max-w-xs truncate text-[12.5px] text-center'>
+          <div className="max-w-xs truncate text-[12.5px] text-center">
             {row.getValue("observacoes")}
           </div>
         ),
@@ -228,26 +228,26 @@ export function ConsorcioTable({ data }: ConsorcioTableProps) {
       },
       {
         id: "actions",
-        header: () => <div className='text-center'>Reservar</div>,
+        header: () => <div className="text-center">Reservar</div>,
         cell: ({ row }) => {
           const carta = row.original;
 
           return (
-            <div className='flex justify-center'>
+            <div className="flex justify-center">
               <Button
                 onClick={() => {
                   const whatsappUrl = createWhatsAppUrl(carta);
                   window.open(whatsappUrl, "_blank");
                 }}
-                className='bg-green-500 hover:bg-green-600 text-white rounded-full h-8.5 w-8.5 p-0 flex items-center justify-center cursor-pointer'
+                className="bg-green-500 hover:bg-green-600 text-white rounded-full h-8.5 w-8.5 p-0 flex items-center justify-center cursor-pointer"
                 disabled={carta["situacao-da-carta"] !== "Disponível"}
               >
                 <Image
-                  src='/whatsapp.svg'
-                  alt='WhatsApp'
+                  src="/whatsapp.svg"
+                  alt="WhatsApp"
                   width={15}
                   height={15}
-                  className='text-white'
+                  className="text-white"
                 />
               </Button>
             </div>
@@ -287,11 +287,11 @@ export function ConsorcioTable({ data }: ConsorcioTableProps) {
   }, []);
 
   return (
-    <div className='w-full space-y-4'>
-      <div className='grid grid-cols-12 gap-3'>
-        <div className='col-span-6 md:col-span-4'>
-          <div className='mb-1'>
-            <label className='text-[13px] font-medium text-foreground'>
+    <div className="w-full space-y-4">
+      <div className="grid grid-cols-12 gap-3">
+        <div className="col-span-6 md:col-span-4">
+          <div className="mb-1">
+            <label className="text-[13px] font-medium text-foreground">
               Categoria
             </label>
           </div>
@@ -300,11 +300,11 @@ export function ConsorcioTable({ data }: ConsorcioTableProps) {
             value={selectedCategoria}
             onValueChange={handleCategoriaChange}
           >
-            <SelectTrigger className='w-full'>
-              <SelectValue placeholder='Selecione uma categoria' />
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Selecione uma categoria" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value='all'>Todas</SelectItem>
+              <SelectItem value="all">Todas</SelectItem>
               {categorias.map((categoria) => (
                 <SelectItem key={categoria} value={categoria}>
                   {categoria}
@@ -314,9 +314,9 @@ export function ConsorcioTable({ data }: ConsorcioTableProps) {
           </Select>
         </div>
 
-        <div className='col-span-6 md:col-span-4'>
-          <div className='mb-1'>
-            <label className='text-[13px] font-medium text-foreground'>
+        <div className="col-span-6 md:col-span-4">
+          <div className="mb-1">
+            <label className="text-[13px] font-medium text-foreground">
               Disponibilidade
             </label>
           </div>
@@ -325,11 +325,11 @@ export function ConsorcioTable({ data }: ConsorcioTableProps) {
             value={selectedDisponibilidade}
             onValueChange={handleDisponibilidadeChange}
           >
-            <SelectTrigger className='w-full'>
-              <SelectValue placeholder='Selecione uma disponibilidade' />
+            <SelectTrigger className="w-full">
+              <SelectValue placeholder="Selecione uma disponibilidade" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value='all'>Todas</SelectItem>
+              <SelectItem value="all">Todas</SelectItem>
               {disponibilidades.map((disponibilidade) => (
                 <SelectItem key={disponibilidade} value={disponibilidade}>
                   {disponibilidade}
@@ -339,28 +339,28 @@ export function ConsorcioTable({ data }: ConsorcioTableProps) {
           </Select>
         </div>
 
-        <div className='col-span-12 md:col-span-4'>
-          <div className='flex items-center justify-between'>
-            <label className='text-[13px] font-medium text-foreground'>
+        <div className="col-span-12 md:col-span-4">
+          <div className="flex items-center justify-between">
+            <label className="text-[13px] font-medium text-foreground">
               Crédito máximo
             </label>
-            <span className='text-sm font-semibold text-primary'>
+            <span className="text-sm font-semibold text-primary">
               R$ {maxCredito[0].toLocaleString("pt-BR")}
             </span>
           </div>
-          <div className='mt-5.5'>
+          <div className="mt-5.5">
             <Slider
               value={maxCredito}
               onValueChange={handleCreditoChange}
-              max={1000000}
+              max={2000000}
               min={0}
               step={10000}
-              className='w-full'
+              className="w-full"
             />
           </div>
         </div>
       </div>
-      <div className='rounded-lg border bg-card dark:bg-transparent shadow-sm mb-10'>
+      <div className="rounded-lg border bg-card dark:bg-transparent shadow-sm mb-10">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -401,7 +401,7 @@ export function ConsorcioTable({ data }: ConsorcioTableProps) {
               <TableRow>
                 <TableCell
                   colSpan={columns.length}
-                  className='h-24 text-center'
+                  className="h-24 text-center"
                 >
                   Nenhum resultado encontrado.
                 </TableCell>
